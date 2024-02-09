@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(NAME "ExamplePlugin")
+set(NAME "SkyrimProjectGlossary")
 set(VERSION 1.0.0.0)
 
 # ---- Options ----
@@ -84,9 +84,19 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF)
 set(Boost_USE_STATIC_LIBS ON)
 
 # ---- Dependencies ----
-find_package(CommonLibSSE CONFIG REQUIRED)
+#find_package(CommonLibSSE CONFIG REQUIRED)
 
 find_package(spdlog REQUIRED CONFIG)
+find_package(imgui REQUIRED)
+find_package(unordered_dense CONFIG REQUIRED)
+include_directories(extern/stb)
+include_directories(extern/imgui_markdown)
+
+find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/utils.hpp")
+
+set(CommonLibPath "extern/CommonLibSSE-NG")
+set(CommonLibName "CommonLibSSE")
+set(GameVersion "Skyrim")
 
 # ---- Add source files ----
 
@@ -116,7 +126,8 @@ add_library(
 	${CMAKE_CURRENT_BINARY_DIR}/include/Version.h
 	${CMAKE_CURRENT_BINARY_DIR}/version.rc
 	.clang-format
-    .editorconfig
+	.editorconfig
+	SkyrimProjectGlossary.ini
 )
 
 target_compile_features(
@@ -125,11 +136,14 @@ target_compile_features(
 		cxx_std_20
 )
 
+add_subdirectory(${CommonLibPath} ${CommonLibName} EXCLUDE_FROM_ALL)
+
 target_include_directories(
 	${PROJECT_NAME}
 	PRIVATE
 		${CMAKE_CURRENT_BINARY_DIR}/include
 		${CMAKE_CURRENT_SOURCE_DIR}/src
+		${CLIB_UTIL_INCLUDE_DIRS}
 )
 
 target_link_libraries(
@@ -137,6 +151,8 @@ target_link_libraries(
 	PRIVATE
 		spdlog::spdlog
 		CommonLibSSE::CommonLibSSE
+		unordered_dense::unordered_dense
+		imgui::imgui
 )
 
 if (MSVC)

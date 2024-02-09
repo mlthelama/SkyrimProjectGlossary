@@ -1,11 +1,27 @@
 {
-  "name": "exampleplugin",
+  "name": "skyrimprojectglossary",
   "version-string": "1.0.0.0",
-  "description": "exampleplugin",
+  "description": "skyrimprojectglossary",
   "homepage": "https://github.com/mlthelama/ExamplePlugin-SKSE64",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "dependencies": [
     "simpleini",
-    "commonlibsse-ng"
+    {
+      "name": "imgui",
+      "features": [
+        "dx11-binding",
+        "win32-binding"
+      ]
+    },
+    "unordered-dense",
+    "clib-util",
+    "fmt",
+    "spdlog",
+    "rapidcsv",
+    "directxtk",
+    "rsm-binary-io"
+  ],
+  "overrides": [
+    { "name": "imgui", "version": "1.88" }
   ]
 }

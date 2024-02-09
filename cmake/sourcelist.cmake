@@ -1,4 +1,33 @@
 set(sources ${sources}
+	src/CLIK/Array.h
+	src/CLIK/GFx/Controls/Button.h
+	src/CLIK/GFx/Controls/CoreList.h
+	src/CLIK/GFx/Controls/ScrollingList.h
+	src/CLIK/GFx/Core/UIComponent.h
+	src/CLIK/MovieClip.h
+	src/CLIK/Object.h
+	src/CLIK/TextField.h
 	src/PCH.h
+	src/event/event.cpp
+	src/event/event.h
+	src/event/input_event.cpp
+	src/event/input_event.h
 	src/main.cpp
+	src/scaleform/menus/glossary_menu.cpp
+	src/scaleform/menus/glossary_menu.h
+	src/scaleform/scaleform.cpp
+	src/scaleform/scaleform.h
+	src/setting/display_tweaks.cpp
+	src/setting/display_tweaks.h
+	src/setting/file_setting.cpp
+	src/setting/file_setting.h
+	src/setting/setting.cpp
+	src/setting/setting.h
+	src/translation/translation.cpp
+	src/translation/translation.h
+	src/ui/markdown/markdown_test.h
+	src/ui/ui_renderer.cpp
+	src/ui/ui_renderer.h
+	src/util/key_util.cpp
+	src/util/key_util.h
 )

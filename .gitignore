@@ -393,4 +393,5 @@ build/
 swf/gfx/
 cmake-build-release
 cmake-build-debug
+venv/
 
