@@ -1,0 +1,11 @@
+{
+  "name": "exampleplugin",
+  "version-string": "1.0.0.0",
+  "description": "exampleplugin",
+  "homepage": "https://github.com/mlthelama/ExamplePlugin-SKSE64",
+  "license": "MIT",
+  "dependencies": [
+    "simpleini",
+    "commonlibsse-ng"
+  ]
+}
