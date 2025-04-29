@@ -3,6 +3,10 @@
 #include "scaleform/menus/glossary_menu.h"
 #include "setting/file_setting.h"
 #include "ui/markdown/markdown_test.h"
+#include "WebView2.h"
+#include <dcomp.h>
+#include <wrl.h>
+#include <wil/com.h>
 
 namespace ui {
     /*static std::map<uint32_t, image> image_struct;
@@ -14,6 +18,9 @@ namespace ui {
     
     ImFont* loaded_font;
     auto tried_font_load = false;
+    Microsoft::WRL::ComPtr<ICoreWebView2> g_WebViewWindow;
+    Microsoft::WRL::ComPtr<ICoreWebView2Controller> g_WebViewController;
+
 
 
     LRESULT ui_renderer::wnd_proc_hook::thunk(const HWND h_wnd,
@@ -73,7 +80,10 @@ namespace ui {
             return;
         }
         logger::info("ImGui initialized.");
-
+        DXGI_SWAP_CHAIN_DESC desc;
+        swapChain->GetDesc(&desc);
+        InitWebView2(desc.OutputWindow, device_);
+        
         initialized.store(true);
 
         wnd_proc_hook::func = reinterpret_cast<WNDPROC>(
@@ -196,7 +206,8 @@ namespace ui {
         //ImGui::GetStyle().Alpha = fade;
 
         ImGui::Begin("GlossaryMenu", nullptr, window_flag);
-        MarkdownExample();
+        //MarkdownExample();
+        //ImGui::Image((void*)webViewTextureSRV.Get(), ImVec2(800, 600));
         
         //draw_ui(screen_size_x, screen_size_y);
 
@@ -291,6 +302,55 @@ namespace ui {
         }*/
     }
 
+    void ui_renderer::InitWebView2(HWND hwnd, ID3D11Device *device) {
+        CreateCoreWebView2EnvironmentWithOptions(nullptr, nullptr, nullptr,
+                        Microsoft::WRL::Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
+                            [hwnd, device]([[maybe_unused]] HRESULT result, ICoreWebView2Environment* env) -> HRESULT {
+                                env->CreateCoreWebView2Controller(hwnd, Microsoft::WRL::Callback<ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>(
+                                    [hwnd, device]([[maybe_unused]] HRESULT result, ICoreWebView2Controller* controller) -> HRESULT {
+                                        g_WebViewController = controller;
+                                        controller->get_CoreWebView2(&g_WebViewWindow);
+
+                                        // Set size
+                                        RECT bounds;
+                                        GetClientRect(hwnd, &bounds);
+                                        controller->put_Bounds(bounds);
+
+                                        // Load menu.html
+                                        /*wchar_t path[MAX_PATH];
+                                        GetModuleFileNameW(nullptr, path, MAX_PATH);
+                                        std::wstring dir(path);
+                                        dir = dir.substr(0, dir.find_last_of(L"\\/"));
+                                        std::wstring htmlPath = L"file:///" + dir + L"/menu.html";
+                                        g_WebViewWindow->Navigate(htmlPath.c_str());*/
+
+                                        // Set HTML content directly
+                                        std::wstring html = LR"(
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <style>
+                                    body { background: rgba(0,0,0,0.7); color: white; font-family: sans-serif; margin: 0; padding: 1em; }
+                                    img { width: 200px; margin: 10px; border: 2px solid white; }
+                                </style>
+                            </head>
+                            <body>
+                                <h2>Injected Menu</h2>
+                                <p>Placeholder images:</p>
+                                <img src='https://via.placeholder.com/200x100' />
+                                <img src='https://via.placeholder.com/200x100/ff0000' />
+                                <img src='https://via.placeholder.com/200x100/00ff00' />
+                            </body>
+                            </html>
+                        )";
+
+                                        g_WebViewWindow->NavigateToString(html.c_str());
+                                        return S_OK;
+                                    }).Get());
+                                return S_OK;
+                            }).Get());
+    }
+
     void ui_renderer::load_all_images() {
         /*load_images(image_type_name_map, image_struct, img_directory, setting::file_setting::get_image_file_ending());
         load_images(icon_type_name_map, icon_struct, icon_directory, setting::file_setting::get_image_file_ending());
@@ -308,5 +368,6 @@ namespace ui {
             key_directory,
             setting::file_setting::get_key_file_ending());
 */
+        
     }
 }

@@ -33,6 +33,8 @@ namespace ui {
             std::string file_ending);
         
         static void load_font();
+        
+        static void InitWebView2(HWND hwnd, ID3D11Device* device);
 
     public:
         static void load_all_images();

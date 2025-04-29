@@ -19,7 +19,8 @@
     "spdlog",
     "rapidcsv",
     "directxtk",
-    "rsm-binary-io"
+    "rsm-binary-io",
+    "webview2"
   ],
   "overrides": [
     { "name": "imgui", "version": "1.88" }

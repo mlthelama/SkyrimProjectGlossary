@@ -89,6 +89,7 @@ set(Boost_USE_STATIC_LIBS ON)
 find_package(spdlog REQUIRED CONFIG)
 find_package(imgui REQUIRED)
 find_package(unordered_dense CONFIG REQUIRED)
+find_package(unofficial-webview2 CONFIG REQUIRED)
 include_directories(extern/stb)
 include_directories(extern/imgui_markdown)
 
@@ -153,6 +154,7 @@ target_link_libraries(
 		CommonLibSSE::CommonLibSSE
 		unordered_dense::unordered_dense
 		imgui::imgui
+		unofficial::webview2::webview2
 )
 
 if (MSVC)
